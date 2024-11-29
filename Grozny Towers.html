@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Калькулятор стоимости квартиры</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      padding: 0;
+      background-color: #f5f5f5;
+    }
+    .container {
+      max-width: 600px;
+      margin: auto;
+      padding: 20px;
+      background-color: #fff;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    h3 {
+      text-align: center;
+    }
+    input, label, select, button {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      box-sizing: border-box;
+    }
+    button {
+      background-color: #0288d1;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    button:hover {
+      background-color: #026aa7;
+    }
+    .result {
+      margin-top: 20px;
+      padding: 15px;
+      background-color: #e0f7fa;
+      border: 1px solid #0288d1;
+    }
+    .result p {
+      margin: 5px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h3>Калькулятор стоимости квартиры</h3>
+    <label for="area">Площадь квартиры (м²):</label>
+    <input type="number" id="area" placeholder="Введите площадь" min="1">
+
+    <label for="floor">Выберите этаж:</label>
+    <select id="floor">
+      <option value="1">2-6 этаж</option>
+      <option value="1.05">7-18 этаж (+5%)</option>
+    </select>
+
+    <button onclick="calculate()">Рассчитать</button>
+
+    <div class="result" id="result"></div>
+  </div>
+
+  <script>
+    function calculate() {
+      const pricePerSquareMeter = 94000; // Цена за 1 м²
+      const mandatoryPayment = 200000; // Обязательный платёж
+      const area = parseFloat(document.getElementById('area').value);
+      const floorMultiplier = parseFloat(document.getElementById('floor').value);
+
+      // Проверка ввода
+      if (!area || area <= 0) {
+        alert("Введите корректную площадь!");
+        return;
+      }
+
+      // Расчёт стоимости
+      const basePrice = area * pricePerSquareMeter; // Базовая стоимость
+      const fullPrice = basePrice * floorMultiplier; // Стоимость с учётом этажа
+      const oneYearMonthly = fullPrice / 12; // Рассрочка на 1 год (без изменений)
+      const twoYearMonthly = (fullPrice * 1.15) / 24; // Рассрочка на 2 года (+15%)
+      const threeYearMonthly = (fullPrice * 1.25) / 36; // Рассрочка на 3 года (+25%)
+
+      // Вывод результатов
+      document.getElementById('result').innerHTML = `
+        <p><b>Полная стоимость:</b> ${fullPrice.toLocaleString()} руб.</p>
+        <p><b>Обязательный платёж:</b> ${mandatoryPayment.toLocaleString()} руб.</p>
+        <p><b>Рассрочка на 1 год:</b> ${fullPrice.toLocaleString()} руб. (<b>в месяц:</b> ${oneYearMonthly.toLocaleString()} руб.)</p>
+        <p><b>Рассрочка на 2 года:</b> ${(fullPrice * 1.15).toLocaleString()} руб. (<b>в месяц:</b> ${twoYearMonthly.toLocaleString()} руб.)</p>
+        <p><b>Рассрочка на 3 года:</b> ${(fullPrice * 1.25).toLocaleString()} руб. (<b>в месяц:</b> ${threeYearMonthly.toLocaleString()} руб.)</p>
+      `;
+    }
+  </script>
+</body>
+</html>
